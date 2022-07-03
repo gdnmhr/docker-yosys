@@ -42,7 +42,7 @@ WORKDIR /home/yosys/tools
 RUN git clone --recursive https://github.com/sterin/super-prove-build
 WORKDIR /home/yosys/tools/super-prove-build
 RUN mkdir build
-WORKDIR /home/yosys/tools/build
+WORKDIR /home/yosys/tools/super-prove-build/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release -G Ninja ..
 RUN ninja
 RUN ninja package
