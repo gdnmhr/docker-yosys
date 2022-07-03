@@ -57,7 +57,8 @@ WORKDIR /home/yosys/tools
 RUN git clone https://bitbucket.org/arieg/extavy.git
 WORKDIR /home/yosys/tools/extavy
 RUN git submodule update --init
-RUN mkdir build; cd build
+RUN mkdir build
+WORKDIR /home/yosys/tools/extavy/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make -j$(nproc)
 RUN cp avy/src/{avy,avybmc} /usr/local/bin/
