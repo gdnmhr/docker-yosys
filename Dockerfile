@@ -33,7 +33,7 @@ WORKDIR /home/yosys/tools
 
 RUN git clone https://github.com/Z3Prover/z3.git z3
 WORKDIR /home/yosys/tools/z3
-RUN python scripts/mk_make.py
+RUN python3 scripts/mk_make.py
 WORKDIR /home/yosys/tools/z3/build
 RUN make -j$(nproc)
 RUN make install
