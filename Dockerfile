@@ -57,6 +57,9 @@ WORKDIR /home/yosys/tools
 RUN git clone https://bitbucket.org/arieg/extavy.git
 WORKDIR /home/yosys/tools/extavy
 RUN git submodule update --init
+RUN sed -i 's/bool isSolved () { return m_Trivial || m_State || !m_State; }/ bool isSolved () { return bool{m_Trivial || m_State || !m_State}; }/' avy/src/ItpGlucose.h
+RUN sed -i 's/return tobool (m_pSat->modelValue(x));/boost::logic::tribool y = tobool (m_pSat->modelValue(x));\n        return bool{y};/' avy/src/ItpGlucose.h
+RUN sed -i 's/bool isSolved () { return m_Trivial || m_State || !m_State; }/bool isSolved () { return bool{m_Trivial || m_State || !m_State}; }/' avy/src/ItpMinisat.h
 RUN mkdir build
 WORKDIR /home/yosys/tools/extavy/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
