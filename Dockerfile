@@ -64,7 +64,8 @@ RUN mkdir build
 WORKDIR /home/yosys/tools/extavy/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make -j$(nproc)
-RUN cp avy/src/{avy,avybmc} /usr/local/bin/
+RUN cp avy/src/avy /usr/local/bin/
+RUN cp avy/src/avybmc /usr/local/bin/
 WORKDIR /home/yosys/tools
 
 RUN git clone https://github.com/boolector/boolector
@@ -73,7 +74,8 @@ RUN ./contrib/setup-btor2tools.sh
 RUN ./contrib/setup-lingeling.sh
 RUN ./configure.sh
 RUN make -C build -j$(nproc)
-RUN cp build/bin/{boolector,btor*} /usr/local/bin/
+RUN cp build/bin/boolector /usr/local/bin/
+RUN cp build/bin/btor* /usr/local/bin/
 RUN cp deps/btor2tools/bin/btorsim /usr/local/bin/
 WORKDIR /home/yosys/tools
 
@@ -84,3 +86,5 @@ RUN cmake . -DBUILD_SHARED_LIBS=OFF
 RUN make -j$(nproc)
 RUN make install
 WORKDIR /home/yosys/tools
+
+WORKDIR /home/yosys
