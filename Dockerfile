@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      xdot pkg-config python2 python3 libftdi-dev gperf \
                      libboost-program-options-dev autoconf libgmp-dev \
                      cmake curl cmake ninja-build g++ python3-dev python3-setuptools \
-                     python3-pip
+                     python3-pip python2-dev python2-setuptools python2-pip 
 					 
 WORKDIR /home/yosys
 RUN mkdir tools
