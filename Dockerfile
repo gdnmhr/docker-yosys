@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:latest as build
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-essential clang bison flex libreadline-dev \
@@ -15,8 +15,10 @@ WORKDIR /home/yosys/tools
 
 RUN git clone https://github.com/YosysHQ/yosys.git yosys
 WORKDIR /home/yosys/tools/yosys
-RUN make -j$(nproc)
-RUN make install
+RUN mkdir build
+WORKDIR /home/yosys/tools/yosys/build
+RUN make -j$(nproc) -f ../Makefile
+RUN make install -f ../Makefile
 WORKDIR /home/yosys/tools
 
 RUN git clone https://github.com/YosysHQ/SymbiYosys.git SymbiYosys
@@ -89,12 +91,27 @@ RUN make install
 WORKDIR /home/yosys/tools
 
 RUN curl -sSL https://get.haskellstack.org/ | sh
-RUN git clone git clone https://github.com/zachjs/sv2v.git
+RUN git clone https://github.com/zachjs/sv2v.git
 WORKDIR /home/yosys/tools/sv2v
 RUN make
 RUN stack install
 WORKDIR /home/yosys/tools
 
 WORKDIR /home/yosys
+
+FROM alpine:latest as main
+
+RUN apk update
+RUN apk upgrade
+RUN apk add bash
+RUN apk add git
+
+COPY --from=build /usr/local/bin /usr/local/bin
+COPY --from=build /usr/local/lib /usr/local/lib
+COPY --from=build /usr/local/include /usr/local/include
+COPY --from=build /usr/local/share /usr/local/share
+COPY --from=build /usr/bin/z3 /usr/bin/z3
+COPY --from=build /usr/local/super_prove /usr/local/super_prove
+COPY --from=build /root/.local/bin/sv2v /usr/local/bin/sv2v
 
 CMD ["/bin/bash"]
