@@ -6,8 +6,10 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      xdot pkg-config python2 python3 libftdi-dev gperf \
                      libboost-program-options-dev autoconf libgmp-dev \
                      cmake curl cmake ninja-build g++ python3-dev python3-setuptools \
-                     python3-pip python2-dev
-
+                     python3-pip python2-dev 
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+RUN /usr/bin/python2.7 get-pip.py
+					 
 WORKDIR /home/yosys
 RUN mkdir tools
 WORKDIR /home/yosys/tools
@@ -52,8 +54,8 @@ RUN ninja package
 RUN tar -C /usr/local -xf super_prove*.tar.gz
 RUN touch /usr/local/bin/suprove 
 RUN echo "#!/bin/bash" > /usr/local/bin/suprove
-RUN echo "tool=super_prove; if [ \"\$1\" != \"\${1#+}\" ]; then tool=\"\${1#+}\"; shift; fi" >> /usr/local/bin/suprove
-RUN echo "exec /usr/local/super_prove/bin/\${tool}.sh \"\$@\"" >> /usr/local/bin/suprove
+RUN echo "tool=super_prove; if [ \"$$1\" != \"$${1#+}\" ]; then tool=\"${1#+}\"; shift; fi" >> /usr/local/bin/suprove
+RUN echo "exec /usr/local/super_prove/bin/$${tool}.sh \"$$@\"" >> /usr/local/bin/suprove
 RUN chmod +x /usr/local/bin/suprove
 WORKDIR /home/yosys/tools
 
