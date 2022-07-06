@@ -6,9 +6,8 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      xdot pkg-config python2 python3 libftdi-dev gperf \
                      libboost-program-options-dev autoconf libgmp-dev \
                      cmake curl cmake ninja-build g++ python3-dev python3-setuptools \
-                     python3-pip python2-dev 
-ENV PATH="/root/.local/bin:$PATH" 		     
-					 
+                     python3-pip python2-dev
+
 WORKDIR /home/yosys
 RUN mkdir tools
 WORKDIR /home/yosys/tools
@@ -48,12 +47,13 @@ RUN mkdir build
 WORKDIR /home/yosys/tools/super-prove-build/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release -G Ninja ..
 RUN ninja
+RUn sed -i 's/"--system" "--target"/"--target"/' cmake_install.cmake
 RUN ninja package
 RUN tar -C /usr/local -xf super_prove*.tar.gz
 RUN touch /usr/local/bin/suprove 
 RUN echo "#!/bin/bash" > /usr/local/bin/suprove
-RUN echo "tool=super_prove; if [ \"$$1\" != \"$${1#+}\" ]; then tool=\"${1#+}\"; shift; fi" >> /usr/local/bin/suprove
-RUN echo "exec /usr/local/super_prove/bin/$${tool}.sh \"$$@\"" >> /usr/local/bin/suprove
+RUN echo "tool=super_prove; if [ \"\$1\" != \"\${1#+}\" ]; then tool=\"\${1#+}\"; shift; fi" >> /usr/local/bin/suprove
+RUN echo "exec /usr/local/super_prove/bin/\${tool}.sh \"\$@\"" >> /usr/local/bin/suprove
 RUN chmod +x /usr/local/bin/suprove
 WORKDIR /home/yosys/tools
 
