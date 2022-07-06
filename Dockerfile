@@ -52,8 +52,8 @@ RUN ninja package
 RUN tar -C /usr/local -xf super_prove*.tar.gz
 RUN touch /usr/local/bin/suprove 
 RUN echo "#!/bin/bash" > /usr/local/bin/suprove
-RUN echo "tool=super_prove; if [ \"$1\" != \"${1#+}\" ]; then tool=\"${1#+}\"; shift; fi" > /usr/local/bin/suprove
-RUN echo "exec /usr/local/super_prove/bin/${tool}.sh \"$@\"" > /usr/local/bin/suprove
+RUN echo "tool=super_prove; if [ \"$$1\" != \"$${1#+}\" ]; then tool=\"${1#+}\"; shift; fi" >> /usr/local/bin/suprove
+RUN echo "exec /usr/local/super_prove/bin/$${tool}.sh \"$$@\"" >> /usr/local/bin/suprove
 RUN chmod +x /usr/local/bin/suprove
 WORKDIR /home/yosys/tools
 
@@ -99,12 +99,17 @@ WORKDIR /home/yosys/tools
 
 WORKDIR /home/yosys
 
-FROM alpine:latest as main
+FROM ubuntu:latest as main
 
-RUN apk update
-RUN apk upgrade
-RUN apk add bash
-RUN apk add git
+RUN apt update
+RUN apt upgrade -y
+RUN apt install -y git bison flex libreadline-dev \
+        libffi-dev graphviz \
+        xdot python3 libftdi-dev gperf \
+        libboost-program-options-dev libgmp-dev \
+        curl python3-pip
+RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y tcl-dev
+RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y nano python2.7-dev
 
 COPY --from=build /usr/local/bin /usr/local/bin
 COPY --from=build /usr/local/lib /usr/local/lib
