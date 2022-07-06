@@ -7,6 +7,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      libboost-program-options-dev autoconf libgmp-dev \
                      cmake curl cmake ninja-build g++ python3-dev python3-setuptools \
                      python3-pip python2-dev 
+ENV PATH="/root/.local/bin:$PATH" 		     
 					 
 WORKDIR /home/yosys
 RUN mkdir tools
@@ -87,4 +88,13 @@ RUN make -j$(nproc)
 RUN make install
 WORKDIR /home/yosys/tools
 
+RUN curl -sSL https://get.haskellstack.org/ | sh
+RUN git clone git clone https://github.com/zachjs/sv2v.git
+WORKDIR /home/yosys/tools/sv2v
+RUN make
+RUN stack install
+WORKDIR /home/yosys/tools
+
 WORKDIR /home/yosys
+
+CMD ["/bin/bash"]
