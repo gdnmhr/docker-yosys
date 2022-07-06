@@ -36,7 +36,7 @@ jobs:
             gdnmhr/gdnmhr
           flavor: |
             latest=true
-            prefix=yosys-,onlatest=true
+            prefix=yosys-alpine-,onlatest=true
             suffix=
           # Docker tags based on the following events/attributes
           tags: |
