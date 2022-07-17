@@ -1,4 +1,4 @@
-name: Yosys - Build Docker Image
+name: SymbiYosys - Build Docker Image
 
 on:
   workflow_dispatch:
@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       # https://github.com/docker/setup-qemu-action
-      - name: Set variables
-        run: |
-          echo "VERSION=0.18" >> $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       # https://github.com/docker/setup-buildx-action
@@ -33,19 +30,18 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            gdnmhr/gdnmhr
+            gdnmhr/symbiyosys
           flavor: |
             latest=true
-            prefix=yosys-slim-,onlatest=true
             suffix=
           # Docker tags based on the following events/attributes
           tags: |
-            type=raw,value=${{ env.VERSION }}
+            type=raw,value={{date 'YYYYMMDD'}}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/arm64,linux/amd64
           push: true
           tags: ${{ steps.meta-step.outputs.tags }}
           labels: ${{ steps.meta-step.outputs.labels }}
