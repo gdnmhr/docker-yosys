@@ -10,7 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
 RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 RUN /usr/bin/python2.7 get-pip.py
 
-RUN apt-get install default-jdk
+RUN apt-get install -y openjdk-18-jre-headless
 					 
 WORKDIR /home/yosys
 RUN mkdir tools
