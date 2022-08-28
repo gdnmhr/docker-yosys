@@ -9,8 +9,6 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      python3-pip python2-dev 
 RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 RUN /usr/bin/python2.7 get-pip.py
-
-RUN apt-get install -y openjdk-18-jre-headless
 					 
 WORKDIR /home/yosys
 RUN mkdir tools
@@ -112,6 +110,7 @@ RUN apt install -y git bison flex libreadline-dev \
         xdot python3 libftdi-dev gperf \
         libboost-program-options-dev libgmp-dev \
         curl python3-pip
+RUN apt install -y openjdk-18-jre-headless
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y tcl-dev
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y nano python2.7-dev
 
