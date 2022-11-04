@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y build-ess
                      xdot pkg-config python2 python3 libftdi-dev gperf \
                      libboost-program-options-dev autoconf libgmp-dev \
                      cmake curl cmake ninja-build g++ python3-dev python3-setuptools \
-                     python3-pip python2-dev 
+                     python3-pip python2-dev autoconf gperf
 RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 RUN /usr/bin/python2.7 get-pip.py
 					 
@@ -99,9 +99,20 @@ RUN make
 RUN stack install
 WORKDIR /home/yosys/tools
 
+RUN git clone https://github.com/steveicarus/iverilog.git
+WORKDIR /home/yosys/tools/iverilog
+RUN sh autoconf.sh
+RUN ./configure
+RUN make
+RUN make install
+WORKDIR /home/yosys/tools
+
 WORKDIR /home/yosys
 
 FROM ubuntu:latest as main
+
+RUN useradd -d /home/yosys -m yosys
+WORKDIR /home/yosys
 
 RUN apt update
 RUN apt upgrade -y
@@ -121,5 +132,7 @@ COPY --from=build /usr/local/share /usr/local/share
 COPY --from=build /usr/bin/z3 /usr/bin/z3
 COPY --from=build /usr/local/super_prove /usr/local/super_prove
 COPY --from=build /root/.local/bin/sv2v /usr/local/bin/sv2v
+
+USER yosys
 
 CMD ["/bin/bash"]
