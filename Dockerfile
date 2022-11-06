@@ -113,7 +113,8 @@ WORKDIR /home/yosys
 
 FROM ubuntu:latest as main
 
-RUN useradd -u 1001 -d /home/yosys -m yosys
+RUN groupadd -g 1001 yosys
+RUN useradd yosys -u 1001 -g 1001 -m -d /home/yosys -s /bin/bash
 WORKDIR /home/yosys
 
 RUN apt update
