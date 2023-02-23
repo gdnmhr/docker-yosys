@@ -126,6 +126,7 @@ RUN apt install -y git bison flex libreadline-dev \
         curl python3-pip
 RUN apt install -y openjdk-18-jre-headless
 RUN apt install -y openjdk-18-dbg
+RUN apt install -y maven
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y tcl-dev
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt install -y nano python2.7-dev
 
